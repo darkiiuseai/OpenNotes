@@ -1,0 +1,122 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:PlusNotes.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="650"
+        x:Class="PlusNotes.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="PlusNotes"
+        WindowStartupLocation="CenterScreen"
+        Width="1000" Height="650"
+        MinWidth="800" MinHeight="500">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="Button.toolbar">
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="CornerRadius" Value="4"/>
+        </Style>
+        <Style Selector="Button.toolbar:pointerover">
+            <Setter Property="Background" Value="#20000000"/>
+        </Style>
+        <Style Selector="ListBoxItem.note">
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="CornerRadius" Value="4"/>
+        </Style>
+        <Style Selector="ListBoxItem.note:selected">
+            <Setter Property="Background" Value="#30007ACC"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Barre d'outils principale -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" Background="#F0F0F0" Padding="10,5">
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5">
+                <Button Classes="toolbar" Command="{Binding CreateNewNoteCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <PathIcon Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Width="16" Height="16"/>
+                        <TextBlock Text="Nouvelle note"/>
+                    </StackPanel>
+                </Button>
+                <Button Classes="toolbar" Command="{Binding SaveNotesCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <PathIcon Data="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z" Width="16" Height="16"/>
+                        <TextBlock Text="Sauvegarder"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            
+            <TextBox Grid.Column="1" Margin="10,0" Watermark="Rechercher..." Text="{Binding SearchText}">
+                <TextBox.KeyBindings>
+                    <KeyBinding Gesture="Enter" Command="{Binding SearchNotesCommand}"/>
+                </TextBox.KeyBindings>
+            </TextBox>
+            
+            <Button Grid.Column="2" Classes="toolbar" Command="{Binding SearchNotesCommand}">
+                <PathIcon Data="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" Width="16" Height="16"/>
+            </Button>
+        </Grid>
+
+        <!-- Contenu principal -->
+        <Grid Grid.Row="1" ColumnDefinitions="300,*">
+            <!-- Liste des notes -->
+            <Border Grid.Column="0" BorderBrush="#DDDDDD" BorderThickness="0,0,1,0">
+                <ListBox ItemsSource="{Binding Notes}" SelectedItem="{Binding SelectedNote}" Background="Transparent" Padding="5">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto" Classes="note">
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Title}" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
+                                <Button Grid.Row="0" Grid.Column="1" Background="Transparent" Padding="4" CornerRadius="4"
+                                        Command="{Binding $parent[ListBox].DataContext.ToggleFavoriteCommand}" CommandParameter="{Binding}">
+                                    <PathIcon Data="{Binding IsFavorite, Converter={x:Static BoolConverters.TrueToValue}, ConverterParameter='M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z', FallbackValue='M12,15.39L8.24,17.66L9.23,13.38L5.91,10.5L10.29,10.13L12,6.09L13.71,10.13L18.09,10.5L14.77,13.38L15.76,17.66M22,9.24L14.81,8.63L12,2L9.19,8.63L2,9.24L7.45,13.97L5.82,21L12,17.27L18.18,21L16.54,13.97L22,9.24Z'}" Width="16" Height="16" Foreground="{Binding IsFavorite, Converter={x:Static BoolConverters.TrueToValue}, ConverterParameter='Gold', FallbackValue='Gray'}"/>
+                                </Button>
+                                <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Content}" TextTrimming="CharacterEllipsis" Opacity="0.7" MaxLines="2" Margin="0,5,0,0"/>
+                                <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,5,0,0" Spacing="5">
+                                    <TextBlock Text="{Binding ModifiedAt, StringFormat='{}{0:dd/MM/yyyy HH:mm}'}" FontSize="11" Opacity="0.6"/>
+                                    <TextBlock Text="{Binding Category}" FontSize="11" Opacity="0.6" IsVisible="{Binding Category, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Border>
+
+            <!-- Éditeur de note -->
+            <Grid Grid.Column="1" RowDefinitions="Auto,*" Margin="10">
+                <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+                    <TextBox Grid.Column="0" Text="{Binding SelectedNote.Title}" Watermark="Titre de la note" FontSize="18" FontWeight="Bold" BorderThickness="0" Padding="0" IsReadOnly="{Binding !IsEditing}"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5">
+                        <Button Command="{Binding DeleteNoteCommand}" CommandParameter="{Binding SelectedNote}" Background="Transparent" ToolTip.Tip="Supprimer cette note">
+                            <PathIcon Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" Width="16" Height="16"/>
+                        </Button>
+                        <ToggleButton IsChecked="{Binding IsEditing}" Background="Transparent" ToolTip.Tip="Modifier cette note">
+                            <PathIcon Data="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" Width="16" Height="16"/>
+                        </ToggleButton>
+                    </StackPanel>
+                </Grid>
+                
+                <Grid Grid.Row="1" RowDefinitions="Auto,*">
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
+                        <TextBlock Text="Catégorie:" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding SelectedNote.Category}" Width="150" Watermark="Catégorie" IsReadOnly="{Binding !IsEditing}"/>
+                    </StackPanel>
+                    
+                    <TextBox Grid.Row="1" Text="{Binding SelectedNote.Content}" AcceptsReturn="True" TextWrapping="Wrap" Watermark="Contenu de la note" IsReadOnly="{Binding !IsEditing}"/>
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <!-- Barre de statut -->
+        <Border Grid.Row="2" BorderBrush="#DDDDDD" BorderThickness="0,1,0,0" Padding="10,5">
+            <TextBlock Text="{Binding StatusMessage}" Opacity="0.7"/>
+        </Border>
+    </Grid>
+</Window>
