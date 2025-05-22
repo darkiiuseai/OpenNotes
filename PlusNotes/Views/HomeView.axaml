@@ -1,0 +1,88 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:OpenNotes.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="OpenNotes.Views.HomeView">
+
+  <Design.DataContext>
+    <vm:MainWindowViewModel/>
+  </Design.DataContext>
+
+  <Grid RowDefinitions="Auto,*" Margin="20">
+    <StackPanel Grid.Row="0" Spacing="10" Margin="0,0,0,20">
+      <TextBlock Text="Bienvenue sur OpenNotes" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+      <TextBlock Text="Application de prise de notes moderne et extensible" FontSize="16" HorizontalAlignment="Center" Margin="0,0,0,20" Opacity="0.8"/>
+      
+      <!-- Informations de version et mise à jour -->
+      <Border Background="#f0f0f0" CornerRadius="8" Padding="15" Margin="0,0,0,10">
+        <StackPanel Spacing="10">
+          <Grid ColumnDefinitions="*,Auto">
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5">
+              <TextBlock Text="Version actuelle:" FontWeight="SemiBold"/>
+              <TextBlock Text="{Binding CurrentVersion}"/>
+            </StackPanel>
+            <Button Grid.Column="1" Content="Vérifier les mises à jour" Command="{Binding CheckForUpdatesCommand}"/>
+          </Grid>
+          
+          <Grid IsVisible="{Binding UpdateAvailable}">
+            <StackPanel Spacing="10">
+              <StackPanel Orientation="Horizontal" Spacing="5">
+                <TextBlock Text="Nouvelle version disponible:" Foreground="Green" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding LatestVersion}" Foreground="Green"/>
+              </StackPanel>
+              <Button Content="Installer la mise à jour" Command="{Binding InstallUpdateCommand}" 
+                      Background="Green" Foreground="White" HorizontalAlignment="Left"/>
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+    </StackPanel>
+    
+    <!-- Fonctionnalités principales -->
+    <Grid Grid.Row="1" ColumnDefinitions="*,*" RowDefinitions="*,*" Margin="0,10">
+      <!-- Thèmes -->
+      <Border Grid.Row="0" Grid.Column="0" Background="#e3f2fd" CornerRadius="8" Margin="5" Padding="15">
+        <StackPanel Spacing="10">
+          <TextBlock Text="Thèmes" FontSize="18" FontWeight="SemiBold"/>
+          <TextBlock Text="Personnalisez l'apparence de l'application avec des thèmes prédéfinis ou créez les vôtres." TextWrapping="Wrap"/>
+          <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,10,0,0">
+            <Button Content="Gérer les thèmes" Command="{Binding ShowSettingsCommand}"/>
+            <Button Content="Télécharger des thèmes" Command="{Binding ShowSettingsCommand}"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+      
+      <!-- Extensions -->
+      <Border Grid.Row="0" Grid.Column="1" Background="#e8f5e9" CornerRadius="8" Margin="5" Padding="15">
+        <StackPanel Spacing="10">
+          <TextBlock Text="Extensions" FontSize="18" FontWeight="SemiBold"/>
+          <TextBlock Text="Étendez les fonctionnalités de l'application avec des extensions." TextWrapping="Wrap"/>
+          <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,10,0,0">
+            <Button Content="Gérer les extensions" Command="{Binding ShowSettingsCommand}"/>
+            <Button Content="Télécharger des extensions" Command="{Binding ShowSettingsCommand}"/>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+      
+      <!-- Notes -->
+      <Border Grid.Row="1" Grid.Column="0" Background="#fff8e1" CornerRadius="8" Margin="5" Padding="15">
+        <StackPanel Spacing="10">
+          <TextBlock Text="Notes" FontSize="18" FontWeight="SemiBold"/>
+          <TextBlock Text="Créez, modifiez et organisez vos notes avec un éditeur Markdown complet." TextWrapping="Wrap"/>
+          <Button Content="Créer une nouvelle note" Command="{Binding CreateNewNoteCommand}" Margin="0,10,0,0"/>
+        </StackPanel>
+      </Border>
+      
+      <!-- Statistiques -->
+      <Border Grid.Row="1" Grid.Column="1" Background="#f3e5f5" CornerRadius="8" Margin="5" Padding="15">
+        <StackPanel Spacing="10">
+          <TextBlock Text="Statistiques" FontSize="18" FontWeight="SemiBold"/>
+          <TextBlock Text="Visualisez des statistiques détaillées sur vos notes et votre productivité." TextWrapping="Wrap"/>
+          <Button Content="Voir les statistiques" Command="{Binding ToggleStatsViewCommand}" Margin="0,10,0,0"/>
+        </StackPanel>
+      </Border>
+    </Grid>
+  </Grid>
+</UserControl>

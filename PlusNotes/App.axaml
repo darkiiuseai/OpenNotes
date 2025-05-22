@@ -1,7 +1,7 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="PlusNotes.App"
-             xmlns:local="using:PlusNotes"
+             x:Class="OpenNotes.App"
+             xmlns:local="using:OpenNotes"
              RequestedThemeVariant="Default">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
@@ -11,5 +11,13 @@
   
     <Application.Styles>
         <FluentTheme />
+        
+        <!-- Styles pour le thème translucide Mica -->
+        <Style Selector="Window">
+            <Setter Property="TransparencyLevelHint" Value="AcrylicBlur" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="ExtendClientAreaToDecorationsHint" Value="True" />
+            <Setter Property="ExtendClientAreaChromeHints" Value="PreferSystemChrome" />
+        </Style>
     </Application.Styles>
 </Application>

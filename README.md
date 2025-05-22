@@ -1,6 +1,6 @@
-# PlusNotes - Application de Prise de Notes Avancée
+# OpenNotes - Application de Prise de Notes Avancée
 
-PlusNotes est une application de prise de notes moderne et extensible, inspirée par LibreOffice et conçue pour être personnalisable.
+OpenNotes est une application de prise de notes moderne et extensible, inspirée par LibreOffice et conçue pour être personnalisable.
 
 ## Fonctionnalités principales
 
@@ -9,43 +9,78 @@ PlusNotes est une application de prise de notes moderne et extensible, inspirée
 - **Statistiques détaillées** : Suivez votre productivité avec des statistiques sur vos notes
 - **Système de thèmes** : Personnalisez l'apparence de l'application
 - **Système d'extensions** : Étendez les fonctionnalités selon vos besoins
+- **Mises à jour automatiques** : Restez à jour avec les dernières fonctionnalités
 
 ## Système de thèmes
 
-PlusNotes propose un système de thèmes flexible qui vous permet de :
+Personnalisez l'apparence d'OpenNotes selon vos préférences.
 
-- Choisir parmi les thèmes intégrés (clair, sombre, système)
-- Importer des thèmes personnalisés
-- Télécharger des thèmes depuis GitHub
-- Créer vos propres thèmes
+### Thèmes intégrés
+- **Clair (Défaut)** : Thème lumineux et épuré
+- **Sombre** : Thème sombre pour réduire la fatigue oculaire
+- **Système** : S'adapte au thème de votre système d'exploitation
+- **Translucide Mica** : Thème dégradé translucide avec effet Mica
 
-### Installation de thèmes depuis GitHub
+### Création de thèmes personnalisés
 
 1. Dans les paramètres, accédez à l'onglet "Thèmes"
-2. Cliquez sur "Télécharger un thème"
-3. Entrez l'URL du dépôt GitHub contenant le thème
-4. Cliquez sur "Télécharger"
+2. Cliquez sur "Créer un modèle de thème"
+3. Personnalisez les couleurs et les styles
+4. Enregistrez et appliquez votre thème
 
 ## Système d'extensions
 
-PlusNotes peut être étendu avec des extensions qui ajoutent de nouvelles fonctionnalités :
+OpenNotes dispose d'un système d'extensions puissant qui vous permet d'ajouter de nouvelles fonctionnalités selon vos besoins.
 
-- Vérification orthographique
-- Aperçu Markdown en temps réel
-- Coloration syntaxique pour les blocs de code
-- Et bien plus encore...
+### Extensions intégrées
 
-### Installation d'extensions
+#### Exportation Avancée
+Exportez vos notes dans différents formats :
+- PDF
+- HTML
+- Markdown
+- Texte brut
+- RTF
+- DOCX
 
-Vous pouvez installer des extensions de plusieurs façons :
+#### Organisateur Automatique
+Organise et catégorise automatiquement vos notes en fonction de leur contenu :
+- Détection de catégories
+- Suggestion de tags
+- Génération de titres
 
-1. **Depuis un fichier .dll** : Importez directement une extension compilée
-2. **Depuis un package .zip** : Importez un package d'extension complet
-3. **Depuis GitHub** : Téléchargez une extension depuis un dépôt GitHub
+#### Modèles de Notes
+Utilisez des modèles prédéfinis pour différents types de notes :
+- Compte-rendu de réunion
+- Plan de projet
+- Journal quotidien
+- Recette de cuisine
+- Notes de cours
+
+#### Synchronisation Cloud
+Synchronisez vos notes avec différents services cloud :
+- Google Drive
+- OneDrive
+- Dropbox
+
+### Création d'extensions personnalisées
+
+1. Dans les paramètres, accédez à l'onglet "Extensions"
+2. Cliquez sur "Créer un modèle d'extension"
+3. Enregistrez le modèle et développez votre extension
+4. Importez l'extension dans l'application
+
+## Système de mises à jour
+
+OpenNotes vérifie automatiquement les mises à jour au démarrage. Vous pouvez également :
+
+- Vérifier manuellement les mises à jour depuis l'écran d'accueil
+- Installer les mises à jour en un clic
+- Vérifier les mises à jour des thèmes et extensions installés
 
 ## Présentation
 
-PlusNotes est une application de prise de notes moderne et puissante développée avec Avalonia UI. Elle offre une interface utilisateur élégante et intuitive ainsi que de nombreuses fonctionnalités avancées pour gérer efficacement vos notes.
+OpenNotes est une application de prise de notes moderne et puissante développée avec Avalonia UI. Elle offre une interface utilisateur élégante et intuitive ainsi que de nombreuses fonctionnalités avancées pour gérer efficacement vos notes.
 
 ## Fonctionnalités
 
@@ -64,7 +99,7 @@ L'application est construite selon le modèle MVVM (Model-View-ViewModel) avec l
 - **Models** : Définition des objets de données (Note)
 - **ViewModels** : Logique de présentation et de gestion des données
 - **Views** : Interface utilisateur en XAML
-- **Services** : Gestion de la persistance des données
+- **Services** : Gestion de la persistance des données et des mises à jour
 
 ## Utilisation
 
@@ -89,9 +124,9 @@ Cliquez sur le bouton "Statistiques" dans la barre d'outils pour afficher ou mas
 
 ### Prérequis
 
-- .NET 9.0 ou supérieur
-- Avalonia UI 11.2.7 ou supérieur
-- CommunityToolkit.Mvvm 8.2.1 ou supérieur
+- .NET 7.0 ou supérieur
+- Avalonia UI 11.0.0 ou supérieur
+- CommunityToolkit.Mvvm 8.2.0 ou supérieur
 
 ### Compilation
 

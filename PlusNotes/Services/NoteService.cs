@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using PlusNotes.Models;
+using OpenNotes.Models;
 
-namespace PlusNotes.Services
+namespace OpenNotes.Services
 {
     public class NoteService
     {
@@ -16,7 +16,7 @@ namespace PlusNotes.Services
 
         public NoteService()
         {
-            _dataFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PlusNotes");
+            _dataFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "OpenNotes");
             _notesFilePath = Path.Combine(_dataFolderPath, "notes.json");
             
             // Créer le dossier de données s'il n'existe pas

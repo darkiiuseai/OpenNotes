@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using PlusNotes.Models;
-using PlusNotes.Services;
+using OpenNotes.Models;
+using OpenNotes.Services;
+using OpenNotes.Themes;
+using OpenNotes.Extensions;
 
-namespace PlusNotes.ViewModels
+namespace OpenNotes.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
     {
@@ -17,6 +19,7 @@ namespace PlusNotes.ViewModels
         private readonly ExportService _exportService;
         private readonly ThemeManager _themeManager;
         private readonly ExtensionManager _extensionManager;
+        private readonly UpdateService _updateService;
 
         [ObservableProperty]
         private ObservableCollection<Note> _notes = new();
@@ -50,6 +53,18 @@ namespace PlusNotes.ViewModels
         
         [ObservableProperty]
         private bool _showSettingsView;
+        
+        [ObservableProperty]
+        private bool _showHomeView = true;
+        
+        [ObservableProperty]
+        private bool _updateAvailable;
+        
+        [ObservableProperty]
+        private string _latestVersion = string.Empty;
+        
+        [ObservableProperty]
+        private string _currentVersion = string.Empty;
 
         public MainWindowViewModel()
         {
@@ -57,11 +72,18 @@ namespace PlusNotes.ViewModels
             _exportService = new ExportService();
             _themeManager = new ThemeManager();
             _extensionManager = new ExtensionManager();
+            _updateService = new UpdateService();
             
             // Initialiser les ViewModels
             LoadNotesAsync().ConfigureAwait(false);
             StatsViewModel = new StatsViewModel(Notes);
             SettingsViewModel = new SettingsViewModel();
+            
+            // Initialiser les informations de version
+            CurrentVersion = _updateService.CurrentVersion;
+            
+            // Vérifier les mises à jour au démarrage
+            CheckForUpdatesAsync().ConfigureAwait(false);
         }
 
         private async Task LoadNotesAsync()
@@ -129,6 +151,7 @@ namespace PlusNotes.ViewModels
             Notes.Add(newNote);
             SelectedNote = newNote;
             IsEditing = true;
+            ShowHomeView = false;
         }
 
         [RelayCommand]
@@ -182,6 +205,7 @@ namespace PlusNotes.ViewModels
         {
             ShowStatsView = !ShowStatsView;
             ShowSettingsView = false;
+            ShowHomeView = false;
             IsEditing = false;
             
             if (ShowStatsView && StatsViewModel != null)
@@ -195,7 +219,52 @@ namespace PlusNotes.ViewModels
         {
             ShowSettingsView = true;
             ShowStatsView = false;
+            ShowHomeView = false;
             IsEditing = false;
+        }
+        
+        [RelayCommand]
+        private void ShowHome()
+        {
+            ShowHomeView = true;
+            ShowSettingsView = false;
+            ShowStatsView = false;
+            IsEditing = false;
+        }
+        
+        [RelayCommand]
+        private async Task CheckForUpdatesAsync()
+        {
+            try
+            {
+                StatusMessage = "Vérification des mises à jour...";
+                await _updateService.CheckForUpdatesAsync();
+                
+                // Mettre à jour les propriétés
+                UpdateAvailable = _updateService.UpdateAvailable;
+                LatestVersion = _updateService.LatestVersion;
+                StatusMessage = _updateService.UpdateStatus;
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Erreur lors de la vérification des mises à jour: {ex.Message}";
+            }
+        }
+        
+        [RelayCommand]
+        private async Task InstallUpdateAsync()
+        {
+            try
+            {
+                if (!UpdateAvailable) return;
+                
+                StatusMessage = "Installation de la mise à jour...";
+                await _updateService.DownloadAndInstallUpdateAsync();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Erreur lors de l'installation de la mise à jour: {ex.Message}";
+            }
         }
 
         partial void OnSelectedNoteChanged(Note? value)
@@ -203,6 +272,7 @@ namespace PlusNotes.ViewModels
             if (value != null)
             {
                 IsEditing = false;
+                ShowHomeView = false;
                 NoteEditorViewModel = new NoteEditorViewModel(value, AvailableCategories, _exportService);
             }
             else

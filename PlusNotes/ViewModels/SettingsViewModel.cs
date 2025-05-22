@@ -6,16 +6,17 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using PlusNotes.Extensions;
-using PlusNotes.Services;
-using PlusNotes.Themes;
+using OpenNotes.Extensions;
+using OpenNotes.Services;
+using OpenNotes.Themes;
 
-namespace PlusNotes.ViewModels
+namespace OpenNotes.ViewModels
 {
     public partial class SettingsViewModel : ViewModelBase
     {
         private readonly ThemeManager _themeManager;
         private readonly ExtensionManager _extensionManager;
+        private readonly UpdateService _updateService;
 
         [ObservableProperty]
         private ObservableCollection<ThemeInfo> _availableThemes = new();
@@ -52,6 +53,7 @@ namespace PlusNotes.ViewModels
         {
             _themeManager = new ThemeManager();
             _extensionManager = new ExtensionManager();
+            _updateService = new UpdateService();
             
             // Initialiser les thèmes et extensions
             InitializeAsync().ConfigureAwait(false);
@@ -165,19 +167,90 @@ namespace PlusNotes.ViewModels
         [RelayCommand]
         private async Task CheckForUpdates()
         {
-            // Simuler une vérification des mises à jour
             StatusMessage = "Recherche de mises à jour...";
             
-            // Simuler un délai de recherche
-            await Task.Delay(1500);
-            
-            // Vérifier les mises à jour des thèmes
-            await _themeManager.CheckForUpdatesAsync();
-            
-            // Vérifier les mises à jour des extensions
-            await _extensionManager.CheckForUpdatesAsync();
-            
-            StatusMessage = "Vérification des mises à jour terminée";
+            try
+            {
+                // Vérifier les mises à jour de l'application
+                await _updateService.CheckForUpdatesAsync();
+                
+                // Vérifier les mises à jour des thèmes
+                await _themeManager.CheckForUpdatesAsync();
+                
+                // Vérifier les mises à jour des extensions
+                await _extensionManager.CheckForUpdatesAsync();
+                
+                if (_updateService.UpdateAvailable)
+                {
+                    StatusMessage = $"Mise à jour de l'application disponible: {_updateService.LatestVersion}";
+                }
+                else
+                {
+                    StatusMessage = "Vérification des mises à jour terminée";
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Erreur lors de la vérification des mises à jour: {ex.Message}";
+            }
+        }
+        
+        [RelayCommand]
+        private async Task InstallAppUpdate()
+        {
+            try
+            {
+                if (!_updateService.UpdateAvailable) return;
+                
+                StatusMessage = "Installation de la mise à jour...";
+                await _updateService.DownloadAndInstallUpdateAsync();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Erreur lors de l'installation de la mise à jour: {ex.Message}";
+            }
+        }
+        
+        [RelayCommand]
+        private async Task CreateThemeTemplate()
+        {
+            var dialog = new SaveFileDialog
+            {
+                Title = "Créer un modèle de thème",
+                Filters = new()
+                {
+                    new() { Name = "Fichiers JSON", Extensions = new() { "json" } }
+                },
+                InitialFileName = "theme_template.json"
+            };
+
+            var result = await dialog.ShowAsync(App.MainWindow);
+            if (!string.IsNullOrEmpty(result))
+            {
+                await _themeManager.CreateThemeTemplateAsync(result);
+                StatusMessage = "Modèle de thème créé avec succès";
+            }
+        }
+        
+        [RelayCommand]
+        private async Task CreateExtensionTemplate()
+        {
+            var dialog = new SaveFileDialog
+            {
+                Title = "Créer un modèle d'extension",
+                Filters = new()
+                {
+                    new() { Name = "Fichiers JSON", Extensions = new() { "json" } }
+                },
+                InitialFileName = "extension_template.json"
+            };
+
+            var result = await dialog.ShowAsync(App.MainWindow);
+            if (!string.IsNullOrEmpty(result))
+            {
+                await _extensionManager.CreateExtensionTemplateAsync(result);
+                StatusMessage = "Modèle d'extension créé avec succès";
+            }
         }
         
         [RelayCommand]

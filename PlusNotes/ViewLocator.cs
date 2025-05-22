@@ -1,9 +1,9 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using PlusNotes.ViewModels;
+using OpenNotes.ViewModels;
 
-namespace PlusNotes;
+namespace OpenNotes;
 
 public class ViewLocator : IDataTemplate
 {
@@ -13,7 +13,7 @@ public class ViewLocator : IDataTemplate
         if (param is null)
             return null;
         
-        var name = param.GetType().FullName!.Replace("ViewModel", "View", StringComparison.Ordinal);
+        var name = param.GetType().FullName!.Replace("OpenNotes.ViewModels", "OpenNotes.Views");
         var type = Type.GetType(name);
 
         if (type != null)

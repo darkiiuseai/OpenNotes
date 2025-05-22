@@ -1,14 +1,14 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:PlusNotes.ViewModels"
+        xmlns:vm="using:OpenNotes.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="using:PlusNotes.Views"
+        xmlns:views="using:OpenNotes.Views"
         mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="650"
-        x:Class="PlusNotes.Views.MainWindow"
+        x:Class="OpenNotes.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="PlusNotes"
+        Title="OpenNotes"
         WindowStartupLocation="CenterScreen"
         Width="1000" Height="650"
         MinWidth="800" MinHeight="500">
@@ -41,6 +41,12 @@
         <!-- Barre d'outils principale -->
         <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" Background="#F0F0F0" Padding="10,5">
             <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="5">
+                <Button Classes="toolbar" Command="{Binding ShowHomeCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <PathIcon Data="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" Width="16" Height="16"/>
+                        <TextBlock Text="Accueil"/>
+                    </StackPanel>
+                </Button>
                 <Button Classes="toolbar" Command="{Binding CreateNewNoteCommand}">
                     <StackPanel Orientation="Horizontal" Spacing="5">
                         <PathIcon Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" Width="16" Height="16"/>
@@ -130,6 +136,8 @@
             
             <!-- Paramètres -->
             <ContentControl Grid.Column="1" Grid.ColumnSpan="2" Content="{Binding SettingsViewModel}" IsVisible="{Binding ShowSettingsView}"/>
+            <!-- Vue d'accueil -->
+            <ContentControl Grid.Column="1" Grid.ColumnSpan="2" Content="{Binding HomeViewModel}" IsVisible="{Binding ShowHomeView}"/>
         </Grid>
 
         <!-- Barre de statut -->

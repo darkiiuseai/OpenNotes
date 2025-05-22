@@ -1,6 +1,8 @@
 using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
+using OpenNotes.ViewModels;
 
-namespace PlusNotes.Views;
+namespace OpenNotes.Views;
 
 public partial class MainWindow : Window
 {
