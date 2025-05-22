@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "OPfjR/RxSPQ=",
+  "dgSpecHash": "2NKLToTnUTg=",
   "success": true,
-  "projectFilePath": "V:\\CascadeProjects\\plusnotes\\PlusNotes\\PlusNotes.csproj",
+  "projectFilePath": "v:\\CascadeProjects\\plusnotes\\PlusNotes\\PlusNotes.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Toyger\\.nuget\\packages\\avalonia\\11.2.7\\avalonia.11.2.7.nupkg.sha512",
     "C:\\Users\\Toyger\\.nuget\\packages\\avalonia.angle.windows.natives\\2.1.22045.20230930\\avalonia.angle.windows.natives.2.1.22045.20230930.nupkg.sha512",

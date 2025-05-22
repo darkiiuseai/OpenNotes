@@ -1,0 +1,124 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:PlusNotes.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+             x:Class="PlusNotes.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+
+    <Design.DataContext>
+        <vm:SettingsViewModel/>
+    </Design.DataContext>
+
+    <TabControl>
+        <!-- Onglet Thèmes -->
+        <TabItem Header="Thèmes">
+            <Grid RowDefinitions="Auto,*,Auto" Margin="10">
+                <TextBlock Grid.Row="0" Text="Personnalisation de l'apparence" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+                
+                <Grid Grid.Row="1" RowDefinitions="Auto,*">
+                    <!-- Thème actif -->
+                    <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" Margin="0,0,0,20">
+                        <TextBlock Grid.Column="0" Text="Thème actuel:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <ComboBox Grid.Column="1" Items="{Binding AvailableThemes}" SelectedItem="{Binding CurrentTheme}" HorizontalAlignment="Stretch">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <Button Grid.Column="2" Content="Appliquer" Command="{Binding ApplyThemeCommand}" Margin="10,0,0,0"/>
+                    </Grid>
+                    
+                    <!-- Liste des thèmes disponibles -->
+                    <Grid Grid.Row="1" RowDefinitions="Auto,*">
+                        <TextBlock Grid.Row="0" Text="Thèmes disponibles" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <ListBox Grid.Row="1" Items="{Binding AvailableThemes}" SelectedItem="{Binding SelectedTheme}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnDefinitions="*,Auto" Margin="5">
+                                        <StackPanel Grid.Column="0" Spacing="5">
+                                            <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Opacity="0.7"/>
+                                            <TextBlock Text="{Binding Author, StringFormat='Auteur: {0}'}" FontSize="12" Opacity="0.7" 
+                                                       IsVisible="{Binding Author, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </Grid>
+                
+                <!-- Actions -->
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="0,10,0,0">
+                    <Button Content="Importer un thème" Command="{Binding ImportThemeCommand}"/>
+                </StackPanel>
+            </Grid>
+        </TabItem>
+        
+        <!-- Onglet Extensions -->
+        <TabItem Header="Extensions">
+            <Grid RowDefinitions="Auto,*,Auto" Margin="10">
+                <TextBlock Grid.Row="0" Text="Gestion des extensions" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+                
+                <Grid Grid.Row="1" RowDefinitions="Auto,*">
+                    <!-- Extensions actives -->
+                    <Expander Grid.Row="0" Header="Extensions actives" IsExpanded="True" Margin="0,0,0,10">
+                        <ListBox Items="{Binding EnabledExtensions}" MaxHeight="200">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnDefinitions="*,Auto" Margin="5">
+                                        <StackPanel Grid.Column="0" Spacing="5">
+                                            <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Opacity="0.7"/>
+                                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                                <TextBlock Text="{Binding Version, StringFormat='v{0}'}" FontSize="12" Opacity="0.7"/>
+                                                <TextBlock Text="{Binding Author}" FontSize="12" Opacity="0.7"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <Button Grid.Column="1" Content="Désactiver" Command="{Binding $parent[ListBox].DataContext.DisableExtensionCommand}" 
+                                                CommandParameter="{Binding}" VerticalAlignment="Top"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Expander>
+                    
+                    <!-- Extensions disponibles -->
+                    <Grid Grid.Row="1" RowDefinitions="Auto,*">
+                        <TextBlock Grid.Row="0" Text="Extensions disponibles" FontWeight="Bold" Margin="0,0,0,10"/>
+                        <ListBox Grid.Row="1" Items="{Binding AvailableExtensions}" SelectedItem="{Binding SelectedExtension}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnDefinitions="*,Auto" Margin="5">
+                                        <StackPanel Grid.Column="0" Spacing="5">
+                                            <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Opacity="0.7"/>
+                                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                                <TextBlock Text="{Binding Version, StringFormat='v{0}'}" FontSize="12" Opacity="0.7"/>
+                                                <TextBlock Text="{Binding Author}" FontSize="12" Opacity="0.7"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                        <Button Grid.Column="1" Content="Activer" Command="{Binding EnableExtensionCommand}" 
+                                                CommandParameter="{Binding}" VerticalAlignment="Top"
+                                                IsVisible="{Binding IsInitialized, Converter={x:Static BoolConverters.Not}}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </Grid>
+                
+                <!-- Actions -->
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="0,10,0,0">
+                    <Button Content="Installer une extension" Command="{Binding InstallExtensionCommand}"/>
+                    <Button Content="Désinstaller" Command="{Binding UninstallExtensionCommand}" 
+                            CommandParameter="{Binding SelectedExtension}" 
+                            IsEnabled="{Binding SelectedExtension, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                </StackPanel>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</UserControl>

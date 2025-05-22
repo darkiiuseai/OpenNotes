@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -13,6 +14,9 @@ namespace PlusNotes.ViewModels
     public partial class MainWindowViewModel : ViewModelBase
     {
         private readonly NoteService _noteService;
+        private readonly ExportService _exportService;
+        private readonly ThemeManager _themeManager;
+        private readonly ExtensionManager _extensionManager;
 
         [ObservableProperty]
         private ObservableCollection<Note> _notes = new();
@@ -29,10 +33,35 @@ namespace PlusNotes.ViewModels
         [ObservableProperty]
         private string _statusMessage = string.Empty;
 
+        [ObservableProperty]
+        private bool _showStatsView;
+
+        [ObservableProperty]
+        private NoteEditorViewModel? _noteEditorViewModel;
+
+        [ObservableProperty]
+        private StatsViewModel? _statsViewModel;
+
+        [ObservableProperty]
+        private ObservableCollection<string> _availableCategories = new();
+        
+        [ObservableProperty]
+        private SettingsViewModel? _settingsViewModel;
+        
+        [ObservableProperty]
+        private bool _showSettingsView;
+
         public MainWindowViewModel()
         {
             _noteService = new NoteService();
+            _exportService = new ExportService();
+            _themeManager = new ThemeManager();
+            _extensionManager = new ExtensionManager();
+            
+            // Initialiser les ViewModels
             LoadNotesAsync().ConfigureAwait(false);
+            StatsViewModel = new StatsViewModel(Notes);
+            SettingsViewModel = new SettingsViewModel();
         }
 
         private async Task LoadNotesAsync()
@@ -41,10 +70,35 @@ namespace PlusNotes.ViewModels
             {
                 Notes = await _noteService.LoadNotesAsync();
                 StatusMessage = $"{Notes.Count} notes chargées";
+                
+                // Extraire les catégories uniques
+                UpdateAvailableCategories();
+                
+                // Mettre à jour les statistiques
+                if (StatsViewModel != null)
+                {
+                    StatsViewModel.UpdateStats();
+                }
             }
             catch (Exception ex)
             {
                 StatusMessage = $"Erreur lors du chargement des notes: {ex.Message}";
+            }
+        }
+
+        private void UpdateAvailableCategories()
+        {
+            var categories = Notes
+                .Select(n => n.Category)
+                .Where(c => !string.IsNullOrWhiteSpace(c))
+                .Distinct()
+                .OrderBy(c => c)
+                .ToList();
+                
+            AvailableCategories.Clear();
+            foreach (var category in categories)
+            {
+                AvailableCategories.Add(category);
             }
         }
 
@@ -55,6 +109,12 @@ namespace PlusNotes.ViewModels
             {
                 await _noteService.SaveNotesAsync(Notes);
                 StatusMessage = "Notes sauvegardées avec succès";
+                
+                // Mettre à jour les statistiques
+                if (StatsViewModel != null)
+                {
+                    StatsViewModel.UpdateStats();
+                }
             }
             catch (Exception ex)
             {
@@ -112,8 +172,30 @@ namespace PlusNotes.ViewModels
             if (note != null)
             {
                 note.IsFavorite = !note.IsFavorite;
+                note.ModifiedAt = DateTime.Now;
                 SaveNotesCommand.Execute(null);
             }
+        }
+
+        [RelayCommand]
+        private void ToggleStatsView()
+        {
+            ShowStatsView = !ShowStatsView;
+            ShowSettingsView = false;
+            IsEditing = false;
+            
+            if (ShowStatsView && StatsViewModel != null)
+            {
+                StatsViewModel.UpdateStats();
+            }
+        }
+        
+        [RelayCommand]
+        private void ShowSettings()
+        {
+            ShowSettingsView = true;
+            ShowStatsView = false;
+            IsEditing = false;
         }
 
         partial void OnSelectedNoteChanged(Note? value)
@@ -121,6 +203,11 @@ namespace PlusNotes.ViewModels
             if (value != null)
             {
                 IsEditing = false;
+                NoteEditorViewModel = new NoteEditorViewModel(value, AvailableCategories, _exportService);
+            }
+            else
+            {
+                NoteEditorViewModel = null;
             }
         }
 

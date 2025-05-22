@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:PlusNotes.ViewModels"
+             xmlns:sys="using:System.Collections.Generic"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="300"
+             x:Class="PlusNotes.Views.StatsView"
+             x:DataType="vm:StatsViewModel">
+
+    <Border Background="#F5F5F5" CornerRadius="8" Padding="15" Margin="10">
+        <StackPanel Spacing="15">
+            <TextBlock Text="Statistiques" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+            
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto" VerticalAlignment="Center">
+                <!-- Nombre total de notes -->
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Nombre de notes:" Margin="0,5"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding TotalNotes}" FontWeight="SemiBold" Margin="0,5"/>
+                
+                <!-- Notes favorites -->
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Notes favorites:" Margin="0,5"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding FavoriteNotes}" FontWeight="SemiBold" Margin="0,5"/>
+                
+                <!-- Catégories -->
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Catégories:" Margin="0,5"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding CategoryCount}" FontWeight="SemiBold" Margin="0,5"/>
+                
+                <!-- Dernière modification -->
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Dernière modification:" Margin="0,5"/>
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding LastModified, StringFormat='{}{0:dd/MM/yyyy HH:mm}'}" FontWeight="SemiBold" Margin="0,5"/>
+            </Grid>
+            
+            <Separator Background="#DDDDDD" Height="1" Margin="0,5"/>
+            
+            <!-- Catégories populaires -->
+            <StackPanel>
+                <TextBlock Text="Catégories populaires" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                <ItemsControl Items="{Binding TopCategories}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="KeyValuePair<sys:String, sys:Int32>">
+                            <Grid ColumnDefinitions="*,Auto" Margin="0,2">
+                                <TextBlock Grid.Column="0" Text="{Binding Key}" TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Value}" FontWeight="SemiBold"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

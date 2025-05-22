@@ -1,9 +1,12 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
+using PlusNotes.Extensions;
+using PlusNotes.Themes;
 using PlusNotes.ViewModels;
 using PlusNotes.Views;
 
@@ -11,6 +14,8 @@ namespace PlusNotes;
 
 public partial class App : Application
 {
+    public static Window? MainWindow { get; private set; }
+    
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);

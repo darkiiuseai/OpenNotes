@@ -3,6 +3,7 @@
         xmlns:vm="using:PlusNotes.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="using:PlusNotes.Views"
         mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="650"
         x:Class="PlusNotes.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -52,6 +53,18 @@
                         <TextBlock Text="Sauvegarder"/>
                     </StackPanel>
                 </Button>
+                <Button Classes="toolbar" Command="{Binding ToggleStatsViewCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <PathIcon Data="M16,11.78L20.24,4.45L21.97,5.45L16.74,14.5L10.23,10.75L5.46,19H22V21H2V3H4V17.54L9.5,8L16,11.78Z" Width="16" Height="16"/>
+                        <TextBlock Text="Statistiques"/>
+                    </StackPanel>
+                </Button>
+                <Button Classes="toolbar" Command="{Binding ShowSettingsCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <PathIcon Data="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" Width="16" Height="16"/>
+                        <TextBlock Text="Paramètres"/>
+                    </StackPanel>
+                </Button>
             </StackPanel>
             
             <TextBox Grid.Column="1" Margin="10,0" Watermark="Rechercher..." Text="{Binding SearchText}">
@@ -66,7 +79,7 @@
         </Grid>
 
         <!-- Contenu principal -->
-        <Grid Grid.Row="1" ColumnDefinitions="300,*">
+        <Grid Grid.Row="1" ColumnDefinitions="300,*,Auto">
             <!-- Liste des notes -->
             <Border Grid.Column="0" BorderBrush="#DDDDDD" BorderThickness="0,0,1,0">
                 <ListBox ItemsSource="{Binding Notes}" SelectedItem="{Binding SelectedNote}" Background="Transparent" Padding="5">
@@ -90,28 +103,33 @@
             </Border>
 
             <!-- Éditeur de note -->
-            <Grid Grid.Column="1" RowDefinitions="Auto,*" Margin="10">
-                <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,10">
-                    <TextBox Grid.Column="0" Text="{Binding SelectedNote.Title}" Watermark="Titre de la note" FontSize="18" FontWeight="Bold" BorderThickness="0" Padding="0" IsReadOnly="{Binding !IsEditing}"/>
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5">
-                        <Button Command="{Binding DeleteNoteCommand}" CommandParameter="{Binding SelectedNote}" Background="Transparent" ToolTip.Tip="Supprimer cette note">
-                            <PathIcon Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" Width="16" Height="16"/>
-                        </Button>
-                        <ToggleButton IsChecked="{Binding IsEditing}" Background="Transparent" ToolTip.Tip="Modifier cette note">
-                            <PathIcon Data="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" Width="16" Height="16"/>
-                        </ToggleButton>
-                    </StackPanel>
-                </Grid>
-                
-                <Grid Grid.Row="1" RowDefinitions="Auto,*">
-                    <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,10">
-                        <TextBlock Text="Catégorie:" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding SelectedNote.Category}" Width="150" Watermark="Catégorie" IsReadOnly="{Binding !IsEditing}"/>
-                    </StackPanel>
-                    
-                    <TextBox Grid.Row="1" Text="{Binding SelectedNote.Content}" AcceptsReturn="True" TextWrapping="Wrap" Watermark="Contenu de la note" IsReadOnly="{Binding !IsEditing}"/>
-                </Grid>
-            </Grid>
+            <ContentControl Grid.Column="1" Content="{Binding NoteEditorViewModel}" IsVisible="{Binding SelectedNote, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <ContentControl.ContentTemplate>
+                    <DataTemplate>
+                        <local:NoteEditorView DataContext="{Binding}"/>
+                    </DataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
+            
+            <!-- Message quand aucune note n'est sélectionnée -->
+            <Border Grid.Column="1" IsVisible="{Binding SelectedNote, Converter={x:Static ObjectConverters.IsNull}}" Background="Transparent">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <PathIcon Data="M14,10H19.5L14,4.5V10M5,3H15L21,9V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5C3,3.89 3.89,3 5,3M5,5V19H19V12H12V5H5Z" Width="48" Height="48" Opacity="0.3"/>
+                    <TextBlock Text="Sélectionnez une note ou créez-en une nouvelle" Margin="0,10,0,0" Opacity="0.5" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- Vue des statistiques -->
+            <ContentControl Grid.Column="2" Content="{Binding StatsViewModel}" Width="250" IsVisible="{Binding ShowStatsView}">
+                <ContentControl.ContentTemplate>
+                    <DataTemplate>
+                        <local:StatsView DataContext="{Binding}"/>
+                    </DataTemplate>
+                </ContentControl.ContentTemplate>
+            </ContentControl>
+            
+            <!-- Paramètres -->
+            <ContentControl Grid.Column="1" Grid.ColumnSpan="2" Content="{Binding SettingsViewModel}" IsVisible="{Binding ShowSettingsView}"/>
         </Grid>
 
         <!-- Barre de statut -->

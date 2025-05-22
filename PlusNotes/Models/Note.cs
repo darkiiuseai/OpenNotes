@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace PlusNotes.Models
@@ -32,6 +33,19 @@ namespace PlusNotes.Models
 
         [ObservableProperty]
         private ObservableCollection<string> _tags = new();
+        
+        // Propriétés calculées pour les statistiques et Discord Rich Presence
+        [ObservableProperty]
+        private int _wordCount;
+        
+        [ObservableProperty]
+        private int _characterCount;
+        
+        [ObservableProperty]
+        private DateTime _lastViewedAt;
+        
+        [ObservableProperty]
+        private int _viewCount;
 
         public Note()
         {
@@ -44,6 +58,31 @@ namespace PlusNotes.Models
         {
             Title = title;
             Content = content;
+            LastViewedAt = DateTime.Now;
+            UpdateStatistics();
+        }
+        
+        partial void OnContentChanged(string value)
+        {
+            UpdateStatistics();
+        }
+        
+        /// <summary>
+        /// Met à jour les statistiques de la note
+        /// </summary>
+        public void UpdateStatistics()
+        {
+            CharacterCount = Content.Length;
+            WordCount = Regex.Matches(Content, @"\w+").Count;
+        }
+        
+        /// <summary>
+        /// Incrémente le compteur de vues et met à jour la date de dernière consultation
+        /// </summary>
+        public void IncrementViewCount()
+        {
+            ViewCount++;
+            LastViewedAt = DateTime.Now;
         }
     }
 }

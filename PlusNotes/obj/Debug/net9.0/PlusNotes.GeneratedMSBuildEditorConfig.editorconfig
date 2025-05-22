@@ -26,3 +26,12 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [v:/CascadeProjects/plusnotes/PlusNotes/Views/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[v:/CascadeProjects/plusnotes/PlusNotes/Views/NoteEditorView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[v:/CascadeProjects/plusnotes/PlusNotes/Views/SettingsView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[v:/CascadeProjects/plusnotes/PlusNotes/Views/StatsView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

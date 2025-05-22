@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "V:\\CascadeProjects\\plusnotes\\PlusNotes\\PlusNotes.csproj": {}
+    "v:\\CascadeProjects\\plusnotes\\PlusNotes\\PlusNotes.csproj": {}
   },
   "projects": {
-    "V:\\CascadeProjects\\plusnotes\\PlusNotes\\PlusNotes.csproj": {
+    "v:\\CascadeProjects\\plusnotes\\PlusNotes\\PlusNotes.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "V:\\CascadeProjects\\plusnotes\\PlusNotes\\PlusNotes.csproj",
+        "projectUniqueName": "v:\\CascadeProjects\\plusnotes\\PlusNotes\\PlusNotes.csproj",
         "projectName": "PlusNotes",
-        "projectPath": "V:\\CascadeProjects\\plusnotes\\PlusNotes\\PlusNotes.csproj",
+        "projectPath": "v:\\CascadeProjects\\plusnotes\\PlusNotes\\PlusNotes.csproj",
         "packagesPath": "C:\\Users\\Toyger\\.nuget\\packages\\",
-        "outputPath": "V:\\CascadeProjects\\plusnotes\\PlusNotes\\obj\\",
+        "outputPath": "v:\\CascadeProjects\\plusnotes\\PlusNotes\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "V:\\Visual Studio\\NuGetPackages"
